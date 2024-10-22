@@ -12,13 +12,13 @@ public class Renderer3D {
         this.renderer = renderer;
     }
 
-    public void RenderMesh(Mesh mesh) {
+    public void RenderMesh(Mesh mesh, Matrix4x4 matrix) {
         List<Vector3> projected = new ArrayList<>();
 
         // Project Vertex to Screenspace
         for (Vertice vertex : mesh.vertices) {
-            Vector3 vp = ApplyTransform(vertex, mesh.transform);
-            projected.add(ProjectVertex(vp));
+            Vector3 transVertex = Matrix4x4.Multiply(matrix, vertex.position);
+            projected.add(ProjectVertex(transVertex));
         }
 
         // Fill Triangle from Vertices

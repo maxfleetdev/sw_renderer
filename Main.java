@@ -13,6 +13,7 @@ public class Main {
 
     // 3D Renderer
     public static final Renderer3D renderer3D = new Renderer3D(Vw, Vh, d, renderer);
+    public static final Camera camera = new Camera(Vector3.Zero(), Vector3.Zero());
 
     public static void main(String[] args) {
         // Make Meshes
@@ -31,6 +32,8 @@ public class Main {
         mainScene.AddMesh(pyramid);
         mainScene.AddMesh(sphere);
 
+        Matrix4x4 matrix = new Matrix4x4();
+
         // For Movement
         float speed = 0.01f;
 
@@ -38,13 +41,9 @@ public class Main {
             // Clear Pixels
             swapBuffer();
 
-            // Manipulate Meshes
-            cube.transform.rotation.x += speed;
-            cube.transform.rotation.y += speed;
-            pyramid.transform.rotation.x += speed;
-            pyramid.transform.rotation.y += speed;
-            sphere.transform.rotation.x += speed;
-            sphere.transform.rotation.y += speed;
+            // Manipulate Camera
+            camera.position.y += speed;
+            camera.rotation.x += speed * 0.1f;
 
             // Make Pixels
             drawScene(mainScene);
@@ -62,9 +61,12 @@ public class Main {
     }
 
     public static void drawScene(Scene scene) {
+        Matrix4x4 m_Camera = camera.getCameraMatrix();
         Mesh[] m = scene.meshes.toArray(new Mesh[0]);
+
         for (Mesh mesh : m) {
-            renderer3D.RenderMesh(mesh);
+            Matrix4x4 m_Mesh = Matrix4x4.Multiply(m_Camera, mesh.transform.getTransformMatrix());
+            renderer3D.RenderMesh(mesh, m_Mesh);
         }
     }
 
@@ -73,6 +75,6 @@ public class Main {
     }
 
     public static void swapBuffer() {
-        renderer.clearScreen(Color.white);
+        renderer.clearScreen(Color.black);
     }
 }

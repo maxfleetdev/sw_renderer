@@ -8,6 +8,22 @@ public class Transform {
         this.translation = position;
     }
 
+    public Matrix4x4 getTransformMatrix() {
+        Matrix4x4 scaleMatrix = Matrix4x4.Scale(scale.x, scale.y, scale.z);
+        Matrix4x4 rotationMatrixX = Matrix4x4.RotationX(rotation.x);
+        Matrix4x4 rotationMatrixY = Matrix4x4.RotationY(rotation.y);
+        Matrix4x4 rotationMatrixZ = Matrix4x4.RotationZ(rotation.z);
+        Matrix4x4 translationMatrix = Matrix4x4.Translation(translation.x, translation.y, translation.z);
+
+        // Combine transformations in the correct order: Scale -> Rotate -> Translate
+        Matrix4x4 transformMatrix = Matrix4x4.Multiply(scaleMatrix, rotationMatrixX);
+        transformMatrix = Matrix4x4.Multiply(transformMatrix, rotationMatrixY);
+        transformMatrix = Matrix4x4.Multiply(transformMatrix, rotationMatrixZ);
+        transformMatrix = Matrix4x4.Multiply(transformMatrix, translationMatrix);
+
+        return transformMatrix;
+    }
+
     public static Vector3 Scale(Vector3 vertex, Vector3 scale) {
         return new Vector3(
                 vertex.x * scale.x,
