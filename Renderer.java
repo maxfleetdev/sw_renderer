@@ -12,6 +12,8 @@ public class Renderer extends Canvas {
     private final int width;
     private final int height;
 
+    public final InputHandler inputHandler = new InputHandler();
+
     public Renderer(int width, int height) {
         this.width = width;
         this.height = height;
@@ -27,6 +29,11 @@ public class Renderer extends Canvas {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
+
+        // Input Handler
+        this.addKeyListener(inputHandler);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
 
         // Create a BufferedImage for pixel manipulation
         pixelBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

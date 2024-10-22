@@ -32,18 +32,12 @@ public class Main {
         mainScene.AddMesh(pyramid);
         mainScene.AddMesh(sphere);
 
-        Matrix4x4 matrix = new Matrix4x4();
-
-        // For Movement
-        float speed = 0.01f;
-
         while (true) {
             // Clear Pixels
             swapBuffer();
 
-            // Manipulate Camera
-            camera.position.y += speed;
-            camera.rotation.x += speed * 0.1f;
+            // Move Camera
+            handleInput();
 
             // Make Pixels
             drawScene(mainScene);
@@ -56,6 +50,39 @@ public class Main {
                 Thread.sleep(6);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void handleInput() {
+        InputHandler inputHandler = renderer.inputHandler;
+
+        if (inputHandler.isKeyPressed()) {
+            char key = inputHandler.getCurrentKeyPressed();
+            switch (key) {
+                // Translate Camera
+                case 'w':
+                    camera.position.z += 0.02f;
+                    break;
+                case 's':
+                    camera.position.z -= 0.02f;
+                    break;
+                case 'q':
+                    camera.position.y += 0.01f;
+                    break;
+                case 'e':
+                    camera.position.y -= 0.01f;
+                    break;
+
+                // Rotate Camera
+                case 'a':
+                    camera.rotation.y -= 0.01f;
+                    break;
+                case 'd':
+                    camera.rotation.y += 0.01f;
+                    break;
+                default:
+                    break;
             }
         }
     }

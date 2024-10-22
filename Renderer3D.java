@@ -27,11 +27,11 @@ public class Renderer3D {
         }
     }
 
-    public Vector3 ApplyTransform(Vertice vertex, Transform transform) {
-        Vector3 scaled = Transform.Scale(vertex.position, transform.scale);
-        Vector3 rotated = Transform.Rotate(scaled, transform.rotation);
-        return Transform.Translate(rotated, transform.translation);
-    }
+    //public Vector3 ApplyTransform(Vertice vertex, Transform transform) {
+    //    Vector3 scaled = Transform.Scale(vertex.position, transform.scale);
+    //    Vector3 rotated = Transform.Rotate(scaled, transform.rotation);
+    //    return Transform.Translate(rotated, transform.translation);
+    //}
 
     public void RenderTriangle(Triangle triangle, List<Vector3> projected) {
         // Use the vertex indices of the triangle to fetch the projected points
