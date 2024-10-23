@@ -12,7 +12,7 @@ public class Renderer3D {
         this.renderer = renderer;
     }
 
-    public void RenderMesh(Mesh mesh, Matrix4x4 matrix) {
+    public void RenderMesh(Mesh mesh, Matrix4x4 matrix, Camera camera) {
         List<Vector3> projected = new ArrayList<>();
 
         // Project Vertex to Screenspace
@@ -22,16 +22,11 @@ public class Renderer3D {
         }
 
         // Fill Triangle from Vertices
-        for (Triangle triangle : mesh.triangles) {
+        List<Triangle> shownFaces = CullBackFaces(mesh, camera);
+        for (Triangle triangle : shownFaces) {
             RenderTriangle(triangle, projected);
         }
     }
-
-    //public Vector3 ApplyTransform(Vertice vertex, Transform transform) {
-    //    Vector3 scaled = Transform.Scale(vertex.position, transform.scale);
-    //    Vector3 rotated = Transform.Rotate(scaled, transform.rotation);
-    //    return Transform.Translate(rotated, transform.translation);
-    //}
 
     public void RenderTriangle(Triangle triangle, List<Vector3> projected) {
         // Use the vertex indices of the triangle to fetch the projected points
@@ -59,6 +54,31 @@ public class Renderer3D {
         int canvasX = (int) (x * (Cw / vpWidth));
         int canvasY = (int) (y * (Ch / vpHeight));
         return new Vector3(canvasX, canvasY, 0);
+    }
+
+    public List<Triangle> CullBackFaces(Mesh mesh, Camera camera) {
+        List<Triangle> culledFaces = new ArrayList<>();
+        for (Triangle T : mesh.triangles) {
+            // Step 1: Calculate the surface normal of the triangle (in world space)
+            Vector3 normal = Vector3.CalculateSurfaceNormal(T);
+
+            // Step 2: Compute the vector from the camera to the triangle's v0 vertex (in world space)
+            Vector3 viewVector = Vector3.Minus(T.v0.position, camera.position);
+
+            // Normalize the view vector (optional, but improves precision)
+            viewVector = Vector3.Normalize(viewVector);
+
+            // Step 3: Compute the dot product between the normal and the view vector
+            float dotProduct = Vector3.DotProduct(normal, viewVector);
+
+            // Step 4: If the dot product is less than 0, the triangle is back-facing (flip sign if necessary)
+            if (dotProduct <= 0.001f) {
+                // Keep this triangle (front-facing)
+                culledFaces.add(T);
+            }
+        }
+
+        return culledFaces;
     }
 
     // Sorts points and fills a triangle

@@ -13,7 +13,10 @@ public class Main {
 
     // 3D Renderer
     public static final Renderer3D renderer3D = new Renderer3D(Vw, Vh, d, renderer);
+
+    // Camera
     public static final Camera camera = new Camera(Vector3.Zero(), Vector3.Zero());
+    public static final float moveSpeed = 0.04f, rotateSpeed = 0.005f;
 
     public static void main(String[] args) {
         // Make Meshes
@@ -23,7 +26,7 @@ public class Main {
 
         // Set Positions
         cube.SetPosition(new Vector3(-2,0,7));
-        pyramid.SetPosition(new Vector3(0,0,7));
+        pyramid.SetPosition(new Vector3(0,0,10));
         sphere.SetPosition(new Vector3(2,0,7));
 
         // Create Scene
@@ -62,24 +65,24 @@ public class Main {
             switch (key) {
                 // Translate Camera
                 case 'w':
-                    camera.position.z += 0.02f;
+                    camera.position.z += moveSpeed;
                     break;
                 case 's':
-                    camera.position.z -= 0.02f;
+                    camera.position.z -= moveSpeed;
                     break;
                 case 'q':
-                    camera.position.y += 0.01f;
+                    camera.position.y += moveSpeed;
                     break;
                 case 'e':
-                    camera.position.y -= 0.01f;
+                    camera.position.y -= moveSpeed;
                     break;
 
                 // Rotate Camera
                 case 'a':
-                    camera.rotation.y -= 0.01f;
+                    camera.rotation.y -= rotateSpeed;
                     break;
                 case 'd':
-                    camera.rotation.y += 0.01f;
+                    camera.rotation.y += rotateSpeed;
                     break;
                 default:
                     break;
@@ -93,7 +96,7 @@ public class Main {
 
         for (Mesh mesh : m) {
             Matrix4x4 m_Mesh = Matrix4x4.Multiply(m_Camera, mesh.transform.getTransformMatrix());
-            renderer3D.RenderMesh(mesh, m_Mesh);
+            renderer3D.RenderMesh(mesh, m_Mesh, camera);
         }
     }
 

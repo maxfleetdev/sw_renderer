@@ -55,6 +55,6 @@ public class Transform {
     }
 
     public static Vector3 Translate(Vector3 vertex, Vector3 translation) {
-        return Vector3.AddVectors(vertex, translation);
+        return Vector3.Add(vertex, translation);
     }
 }
