@@ -27,7 +27,7 @@ public class Renderer extends Canvas {
         frame.add(this);
         frame.pack();
         frame.setLocationRelativeTo(null);
-        //frame.setResizable(false);
+        frame.setResizable(false);
         frame.setVisible(true);
 
         // Input Handler
